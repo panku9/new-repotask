@@ -47,6 +47,4 @@ jobs:
           echo Writing image definitions file...
           printf '[{"name":"neww","imageUri":"%s"}]' "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" > imagedefinitions.json
 
-    artifacts:
-      files:
-        - imagedefinitions.json
+  
