@@ -42,16 +42,6 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-  Deploy:
-    name: Deploy to S3
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Deploy to S3
-        run: |
-          S3_BUCKET="frontends2"
-          aws s3 sync build/ "s3://$S3_BUCKET"
+ 
 
    
