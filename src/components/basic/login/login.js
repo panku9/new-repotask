@@ -42,7 +42,7 @@ class Login extends React.Component {
     else {
       return (
         <div className="login-box">
-        	<h2 className='login-box-title'>Admin Login</h2>
+        	<h2 className='login-box-title'>pankaj Login</h2>
 	        <form onSubmit={this.handleSubmit}>
 		        <div className="user-box">
 			        <input autoComplete="off" className="input-field" type="text" value={this.state.username} onChange={this.usernameInputHandler} required />
