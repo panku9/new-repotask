@@ -37,12 +37,7 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Get latest task definition revision
-        id: get-latest-revision
-        run: |
-          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/newtask | jq -r '.taskDefinition.revision')
-          echo "::set-output name=latest-revision::$latest_revision"
-
+      
       - name: Update ECS service
         run: |
-          aws ecs update-service --cluster newwtaskcluster --service newservice --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/newtask:${{ steps.create-task-definition.outputs.task-definition.revision }}
+          aws ecs update-service --cluster newwtaskcluster --service newservice --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/newtask:${{ steps.get-latest-revision.outputs.latest-revision }}
