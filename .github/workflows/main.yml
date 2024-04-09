@@ -46,4 +46,4 @@ jobs:
       
       - name: Update ECS service
         run: |
-          aws ecs update-service --cluster newwtaskcluster --service latestervice --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-task:${{ steps.get-latest-revision.outputs.latest-revision }}
+          aws ecs update-service --cluster newwtaskcluster --service latestservice --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-task:${{ steps.get-latest-revision.outputs.latest-revision }}
