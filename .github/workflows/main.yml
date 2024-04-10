@@ -43,7 +43,12 @@ jobs:
         run: |
           latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest | jq -r '.taskDefinition.revision')
           echo "::set-output name=latest-revision::$latest_revision" 
+
+      - name: Update ECS task definition
+        run: |
+          aws ecs register-task-definition --cli-input-json "$(cat ecs-task-definition.json | jq --arg IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG '.containerDefinitions[0].image = $IMAGE_TAG')"
       
       - name: Update ECS service
         run: |
           aws ecs update-service --cluster new-task-cluster --service new-service --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest:${{ steps.get-latest-revision.outputs.latest-revision }}
+
