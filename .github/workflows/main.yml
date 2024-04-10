@@ -1,21 +1,16 @@
-name: Push Docker Image to AWS ECR Repo
-
+name: Push the Docker image to AWS ECR & update ECS
 on:
   push:
     branches:
       - main
 
 jobs:
-  build:
-    name: Build
+  Build_and_Deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      # Step to install jq
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -37,19 +32,18 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-          IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ github.run_number }}
+          IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          
+
       - name: Get latest task definition revision
         id: get-latest-revision
         run: |
-          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest | jq -r '.taskDefinition.revision')
-          echo "::set-output name=latest-revision::$latest_revision" 
-    
+          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:***:task-definition/neww | jq -r '.taskDefinition.revision')
+          echo "::set-output name=latest-revision::$latest_revision"
+
       - name: Update ECS service
         run: |
-          aws ecs update-service --cluster new-task-cluster --service new-service --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest:${{ steps.get-latest-revision.outputs.latest-revision }}"
-
+          aws ecs update-service --cluster newwcluster --service newwservice --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/neww:${{ steps.get-latest-revision.outputs.latest-revision }
 
