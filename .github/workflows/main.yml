@@ -40,7 +40,7 @@ jobs:
       - name: Get latest task definition revision
         id: get-latest-revision
         run: |
-          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:***:task-definition/neww | jq -r '.taskDefinition.revision')
+          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/neww | jq -r '.taskDefinition.revision')
           echo "::set-output name=latest-revision::$latest_revision"
 
       - name: Update ECS service
