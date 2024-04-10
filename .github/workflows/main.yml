@@ -48,16 +48,12 @@ jobs:
         run: |
           const AWS = require('aws-sdk');
           const fs = require('fs');
-
           // Load AWS credentials from environment variables or IAM role
           const ecs = new AWS.ECS({ region: 'us-east-1' }); // Update the region as needed
-
           // Read the ECS task definition from file
           const taskDefinition = JSON.parse(fs.readFileSync('path/to/ecs-task-definition.json', 'utf8'));
-
           // Construct the container definition with the updated image tag
           taskDefinition.containerDefinitions[0].image = '${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPO_NAME }}:${{ steps.get-commit-hash.outputs.commit-hash }}-${{ github.run_number }}';
-
           // Register the updated task definition
           ecs.registerTaskDefinition(taskDefinition, (err, data) => {
             if (err) {
@@ -71,5 +67,6 @@ jobs:
       - name: Update ECS service
         run: |
           aws ecs update-service --cluster new-task-cluster --service new-service --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest:${{ steps.get-latest-revision.outputs.latest-revision }}"
+
 
 
