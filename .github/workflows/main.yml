@@ -41,9 +41,9 @@ jobs:
       - name: Get latest task definition revision
         id: get-latest-revision
         run: |
-          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-task | jq -r '.taskDefinition.revision')
+          latest_revision=$(aws ecs describe-task-definition --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest | jq -r '.taskDefinition.revision')
           echo "::set-output name=latest-revision::$latest_revision" 
       
       - name: Update ECS service
         run: |
-          aws ecs update-service --cluster newwtaskcluster --service latestservice --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-task:${{ steps.get-latest-revision.outputs.latest-revision }}
+          aws ecs update-service --cluster new-task-cluster --service new-service --force-new-deployment --task-definition arn:aws:ecs:us-east-1:318709527952:task-definition/new-latest:${{ steps.get-latest-revision.outputs.latest-revision }}
